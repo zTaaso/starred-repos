@@ -16,24 +16,35 @@ import {
     Info,
     Title,
     Author,
+    Loading,
 } from './styles';
 
 export default function User({ navigation, route }) {
     const { user } = route.params;
     const [stars, setStars] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     navigation.setOptions({
         title: user.name,
     });
 
-    useEffect(() => {
-        async function getStarred() {
-            const response = await api.get(`/users/${user.login}/starred`);
+    async function getStarred() {
+        setLoading(true);
+        const response = await api.get(`/users/${user.login}/starred`);
+        setStars([...response.data]);
+        setLoading(false);
+    }
 
-            setStars([...response.data]);
-        }
+    useEffect(() => {
         getStarred();
     }, []);
+
+    function handleRefresh() {
+        setRefreshing(true);
+        getStarred();
+        setRefreshing(false);
+    }
 
     return (
         <>
@@ -45,21 +56,27 @@ export default function User({ navigation, route }) {
                     <Bio>{user.bio}</Bio>
                 </Header>
 
-                <Stars
-                    data={stars}
-                    keyExtractor={(star) => String(star.id)}
-                    renderItem={({ item }) => (
-                        <Starred>
-                            <OwnerAvatar
-                                source={{ uri: item.owner.avatar_url }}
-                            />
-                            <Info>
-                                <Title>{item.name}</Title>
-                                <Author>{item.owner.login}</Author>
-                            </Info>
-                        </Starred>
-                    )}
-                />
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <Stars
+                        data={stars}
+                        keyExtractor={(star) => String(star.id)}
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        renderItem={({ item }) => (
+                            <Starred>
+                                <OwnerAvatar
+                                    source={{ uri: item.owner.avatar_url }}
+                                />
+                                <Info>
+                                    <Title>{item.name}</Title>
+                                    <Author>{item.owner.login}</Author>
+                                </Info>
+                            </Starred>
+                        )}
+                    />
+                )}
             </Container>
         </>
     );
