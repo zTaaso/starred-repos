@@ -24,15 +24,20 @@ export default function User({ navigation, route }) {
     const [stars, setStars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [page, setPage] = useState(1);
 
     navigation.setOptions({
         title: user.name,
     });
 
-    async function getStarred() {
+    async function getStarred(page = 1) {
         setLoading(true);
-        const response = await api.get(`/users/${user.login}/starred`);
-        setStars([...response.data]);
+        const response = await api.get(`/users/${user.login}/starred`, {
+            params: {
+                page,
+            },
+        });
+        setStars(page >= 2 ? [...stars, ...response.data] : response.data);
         setLoading(false);
     }
 
@@ -42,8 +47,15 @@ export default function User({ navigation, route }) {
 
     function handleRefresh() {
         setRefreshing(true);
+        setPage(1);
         getStarred();
         setRefreshing(false);
+    }
+
+    function loadMore() {
+        setPage(page + 1);
+        getStarred(page);
+        console.log(page);
     }
 
     return (
@@ -64,6 +76,8 @@ export default function User({ navigation, route }) {
                         keyExtractor={(star) => String(star.id)}
                         refreshing={refreshing}
                         onRefresh={handleRefresh}
+                        onEndReachedThreshold={0.2}
+                        onEndReached={loadMore}
                         renderItem={({ item }) => (
                             <Starred>
                                 <OwnerAvatar

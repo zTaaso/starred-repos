@@ -16,6 +16,8 @@ import {
     Bio,
     ProfileButton,
     ProfileButtonText,
+    DeleteButton,
+    Buttons,
 } from './styles';
 
 import api from '../../services/api';
@@ -84,6 +86,10 @@ export default function Main({ navigation }) {
         navigation.navigate('User', { user });
     }
 
+    function handleDelete(user) {
+        setUsers(users.filter((u) => u !== user));
+    }
+
     return (
         <>
             <StatusBar backgroundColor="#7159c1" barStyle="light-content" />
@@ -118,11 +124,27 @@ export default function Main({ navigation }) {
                             <Name>{user.name}</Name>
                             <Bio> {user.bio} </Bio>
 
-                            <ProfileButton onPress={() => handleNavigate(user)}>
-                                <ProfileButtonText>
-                                    Ver perfil
-                                </ProfileButtonText>
-                            </ProfileButton>
+                            <Buttons>
+                                <ProfileButton
+                                    onPress={() => handleNavigate(user)}
+                                >
+                                    <ProfileButtonText>
+                                        Ver perfil
+                                    </ProfileButtonText>
+                                </ProfileButton>
+
+                                <DeleteButton
+                                    onPress={() => {
+                                        handleDelete(user);
+                                    }}
+                                >
+                                    <Icon
+                                        name="delete"
+                                        color="#FFF"
+                                        size={26}
+                                    />
+                                </DeleteButton>
+                            </Buttons>
                         </User>
                     )}
                 />

@@ -37,7 +37,7 @@ export const Bio = styled.Text`
 `;
 
 export const Stars = styled.FlatList.attrs({
-    showsVerticalScrollIndicator: false,
+    showsVerticalScrollIndicator: true,
 })`
     margin-top: 20px;
 `;
