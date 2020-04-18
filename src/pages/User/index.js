@@ -30,32 +30,37 @@ export default function User({ navigation, route }) {
         title: user.name,
     });
 
-    async function getStarred(page = 1) {
-        setLoading(true);
+    async function getStarred(currentPage = 1) {
         const response = await api.get(`/users/${user.login}/starred`, {
             params: {
-                page,
+                page: currentPage,
             },
         });
-        setStars(page >= 2 ? [...stars, ...response.data] : response.data);
-        setLoading(false);
+        setStars(
+            currentPage >= 2 ? [...stars, ...response.data] : response.data
+        );
     }
 
     useEffect(() => {
-        getStarred();
+        async function firstLoad() {
+            setLoading(true);
+            await getStarred(page);
+            setLoading(false);
+        }
+        firstLoad();
     }, []);
 
     function handleRefresh() {
         setRefreshing(true);
         setPage(1);
-        getStarred();
+        getStarred(page);
         setRefreshing(false);
     }
 
     function loadMore() {
+        getStarred(page + 1);
         setPage(page + 1);
-        getStarred(page);
-        console.log(page);
+        console.log(page + 1);
     }
 
     return (
