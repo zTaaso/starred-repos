@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Proptypes from 'prop-types';
-import { StatusBar } from 'react-native';
+import { StatusBar, TouchableOpacity } from 'react-native';
 
 import api from '../../services/api';
 
@@ -63,6 +63,12 @@ export default function User({ navigation, route }) {
         console.log(page + 1);
     }
 
+    function handleRepoPress(repoUrl) {
+        navigation.navigate('Repository', {
+            url: repoUrl,
+        });
+    }
+
     return (
         <>
             <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
@@ -84,15 +90,21 @@ export default function User({ navigation, route }) {
                         onEndReachedThreshold={0.2}
                         onEndReached={loadMore}
                         renderItem={({ item }) => (
-                            <Starred>
-                                <OwnerAvatar
-                                    source={{ uri: item.owner.avatar_url }}
-                                />
-                                <Info>
-                                    <Title>{item.name}</Title>
-                                    <Author>{item.owner.login}</Author>
-                                </Info>
-                            </Starred>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handleRepoPress(item.html_url);
+                                }}
+                            >
+                                <Starred>
+                                    <OwnerAvatar
+                                        source={{ uri: item.owner.avatar_url }}
+                                    />
+                                    <Info>
+                                        <Title>{item.name}</Title>
+                                        <Author>{item.owner.login}</Author>
+                                    </Info>
+                                </Starred>
+                            </TouchableOpacity>
                         )}
                     />
                 )}
