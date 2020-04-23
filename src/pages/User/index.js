@@ -53,7 +53,7 @@ export default function User({ navigation, route }) {
     function handleRefresh() {
         setRefreshing(true);
         setPage(1);
-        getStarred(page);
+        getStarred(1);
         setRefreshing(false);
     }
 
@@ -69,15 +69,25 @@ export default function User({ navigation, route }) {
         });
     }
 
+    function handleProfilePress(userUrl) {
+        navigation.navigate('UserProfile', {
+            userUrl,
+        });
+    }
+
     return (
         <>
             <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
             <Container>
-                <Header>
-                    <Avatar source={{ uri: user.avatar }} />
-                    <Name>{user.name}</Name>
-                    <Bio>{user.bio}</Bio>
-                </Header>
+                <TouchableOpacity
+                    onPress={() => handleProfilePress(user.html_url)}
+                >
+                    <Header>
+                        <Avatar source={{ uri: user.avatar }} />
+                        <Name>{user.name}</Name>
+                        <Bio>{user.bio}</Bio>
+                    </Header>
+                </TouchableOpacity>
 
                 {loading ? (
                     <Loading />
