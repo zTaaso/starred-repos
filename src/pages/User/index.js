@@ -79,9 +79,7 @@ export default function User({ navigation, route }) {
         <>
             <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
             <Container>
-                <TouchableOpacity
-                    onPress={() => handleProfilePress(user.html_url)}
-                >
+                <TouchableOpacity onPress={() => handleProfilePress(user.url)}>
                     <Header>
                         <Avatar source={{ uri: user.avatar }} />
                         <Name>{user.name}</Name>

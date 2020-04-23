@@ -60,6 +60,7 @@ export default function Main({ navigation }) {
                 login: response.data.login,
                 bio: response.data.bio,
                 avatar: response.data.avatar_url,
+                url: response.data.html_url,
             };
 
             setUsers([...users, data]);
