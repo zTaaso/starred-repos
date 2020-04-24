@@ -1,9 +1,14 @@
 import React from 'react';
 import { WebView } from 'react-native-webview';
 
-export default function UserProfile({ route }) {
+export default function UserProfile({ route, navigation }) {
     const { userUrl } = route.params;
-    console.log(userUrl);
 
-    return <WebView source={{ uri: userUrl }} />;
+    return (
+        <WebView
+            onLoad={() => {}}
+            startInLoadingState={true}
+            source={{ uri: userUrl }}
+        />
+    );
 }
